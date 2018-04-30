@@ -28,7 +28,7 @@ def get_version(package_name):
             match = version_re.match(line[:-1])
             if match:
                 return match.groups()[0]
-    return '0.1.0'
+    return '1.0.0'
 
 
 class test(cmd.Command):
@@ -76,7 +76,7 @@ class test(cmd.Command):
             sys.exit(1)
 
 
-PACKAGE = 'throttle'
+PACKAGE = 'lotus_eaters'
 
 
 setup(
@@ -84,12 +84,12 @@ setup(
     version=get_version(PACKAGE),
     author="Michael Petychakis",
     author_email="hello@apilama.com",
-    description="A robust and versatile throttling implementation relying on the token bucket algorithm.",
+    description="A simple Python throttling library relying on the token bucket algorithm with Redis Backend.",
     license="MIT",
     keywords=['throttle', 'rate limit', 'token bucket', 'leaky bucket'],
     url="http://github.com/mpetyx/lotus_eaters",
     download_url="http://pypi.python.org/pypi/lotus_eaters/",
-    packages=['throttle'],
+    packages=['lotus_eaters'],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
