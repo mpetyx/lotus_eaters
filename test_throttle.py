@@ -8,6 +8,7 @@ import unittest
 from lotus_eaters.api import throttle
 from lotus_eaters.storage import BaseStorage
 from lotus_eaters.api import Throttled
+import random
 
 class ThrottlerTest(unittest.TestCase):
 
@@ -49,7 +50,12 @@ class ThrottlerTest(unittest.TestCase):
     # def test_bucket_full_bucket(self):
     #     pass
     #
-    def test_enter_3_values_every_2_second(self):
-        self.assertTrue(throttle(key='test_enter_3_values_every_2_second', rate=1, capacity=5, storage=BaseStorage(), amount=3))
-        self.assertIs(throttle(key='test_enter_3_values_every_2_second', rate=1, capacity=5, storage=BaseStorage(), amount=3),Throttled("Request of %d unit for %s exceeds capacity."
-                    % (3, 'test_enter_3_values_every_2_second')))
+    def test_entering_3_values(self):
+        key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
+        self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+
+    def test_entering_3_values_every_2_second(self):
+        key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
+        self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+        self.assertFalse(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+

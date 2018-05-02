@@ -57,6 +57,7 @@ class Throttler(object):
         """Consume an amount for a given key, or raise a Throttled exception."""
 
         if not self.consume(key, amount, rate, capacity, **kwargs):
+            return False
             raise exc_class("Request of %d unit for %s exceeds capacity."
                     % (amount, key))
         return True
