@@ -26,6 +26,9 @@ function:
             raise ThrottleError()
         # Do the job
 
+    # Or with a custom Redis client,
+    throttle(key=key, rate=1, capacity=5, storage=BaseStorage(client=Redis(host='localhost', port=6379, db=220, password=None)), amount=3)
+
 
 Algorithm
 ---------

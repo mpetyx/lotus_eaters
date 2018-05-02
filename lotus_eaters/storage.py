@@ -9,12 +9,6 @@ This module holds a few storage backends to be used for storing current bucket s
 """
 
 from redis.client import Redis
-from urlparse import urlparse
-# redis_url = urlparse(os.environ.get('REDIS_URL'))
-# client = Redis(host=redis_url.hostname, port=redis_url.port, db=0, password=redis_url.password)
-client = Redis(host='localhost', port=6379, db=13, password=None)
-
-
 
 class BaseStorage(object):
     """Base class for a storage engine.
@@ -22,13 +16,19 @@ class BaseStorage(object):
     (in-memory dict, remote cache, ...)
     """
 
+    def __init__(self, client=None):
+        if not client:
+            self.client = Redis(host='localhost', port=6379, db=13, password=None)
+        else:
+            self.client = client
+
     def get(self, key, default=0.0):
         """Retrieve the current value for a key.
         Args:
             key (str): the key whose value should be retrieved
             default (object): the value to use when no value exist for the key
         """
-        result =  client.get(key)
+        result =  self.client.get(key)
         if not result:
             return default
         else:
@@ -37,7 +37,7 @@ class BaseStorage(object):
 
     def set(self, key, value):
         """Set a new value for a given key."""
-        return client.set(key,value)
+        return self.client.set(key,value)
         # raise NotImplementedError()
 
     def mget(self, *keys, **kwargs):

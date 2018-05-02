@@ -10,6 +10,7 @@ from lotus_eaters.storage import BaseStorage
 from lotus_eaters.api import Throttled
 import random
 from redis import Redis
+from redis.exceptions import ResponseError
 
 class ThrottlerTest(unittest.TestCase):
 
@@ -30,22 +31,11 @@ class ThrottlerTest(unittest.TestCase):
     This allows for temporary bursts and average computations.
     """
 
-    # def some_fun(self, uid, counter):
-    #     if not throttle(key=uid, rate=1, capacity=20, storage=BaseStorage(), amount=1):
-    #         print("something is working")
-    #     return counter + 1
-    #
-    # def test_fun(self):
-    #     counter = 0
-    #     for number in range(1, 1000):
-    #         counter = self.some_fun("kouklaki2", counter)
-    #         print("this is iteration: ",str(counter))
-    #     print
-    #     print
-    #     print
-    #     print
-    #     self.assertEqual(True, False)
-    #
+    def test_with_zero_rate(self):
+        # TODO update this
+        key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
+        self.assertTrue(throttle(key=key, rate=0, capacity=5, storage=BaseStorage(), amount=3))
+
     def test_empty_bucket_initial_request(self):
         key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
         self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
@@ -58,6 +48,11 @@ class ThrottlerTest(unittest.TestCase):
         key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
         self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
         self.assertFalse(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+
+    def test_with_wrong_client(self):
+        key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
+        with self.assertRaises(ResponseError):
+            throttle(key=key, rate=1, capacity=5, storage=BaseStorage(client=Redis(host='localhost', port=6379, db=220, password=None)), amount=3)
 
     def tearDown(self):
         self.client.flushall()
