@@ -5,7 +5,7 @@
 
 
 __author__ = 'mpetyx (Michael Petychakis)'
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __maintainer__ = "Michael Petychakis"
 __email__ = "hello@apilama.com"
 __status__ = "Production"
@@ -28,7 +28,7 @@ def get_version(package_name):
             match = version_re.match(line[:-1])
             if match:
                 return match.groups()[0]
-    return '1.0.0'
+    return __version__
 
 
 class test(cmd.Command):
