@@ -9,8 +9,13 @@ from lotus_eaters.api import throttle
 from lotus_eaters.storage import BaseStorage
 from lotus_eaters.api import Throttled
 import random
+from redis import Redis
 
 class ThrottlerTest(unittest.TestCase):
+
+    def setUp(self):
+        self.client = Redis(host='localhost', port=6379, db=13, password=None)
+        self.client.flushall()
 
     """
 
@@ -41,15 +46,10 @@ class ThrottlerTest(unittest.TestCase):
     #     print
     #     self.assertEqual(True, False)
     #
-    # def test_empty_bucket_initial_request(self):
-    #     pass
-    #
-    # def test_second_request(self):
-    #     pass
-    #
-    # def test_bucket_full_bucket(self):
-    #     pass
-    #
+    def test_empty_bucket_initial_request(self):
+        key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
+        self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+
     def test_entering_3_values(self):
         key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
         self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
@@ -58,4 +58,7 @@ class ThrottlerTest(unittest.TestCase):
         key = ''.join(random.choice('0123456789ABCDEF') for i in range(20))
         self.assertTrue(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
         self.assertFalse(throttle(key=key, rate=1, capacity=5, storage=BaseStorage(), amount=3))
+
+    def tearDown(self):
+        self.client.flushall()
 
