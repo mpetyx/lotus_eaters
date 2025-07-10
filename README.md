@@ -63,3 +63,23 @@ From Github:
 .. code-block:: sh
 
     $ git clone git://github.com/mpetyx/lotus_eaters.git
+
+
+Testing
+-------
+
+The library includes a comprehensive test suite. To run the tests:
+
+.. code-block:: sh
+
+    # Run all tests
+    $ ./run_tests.sh
+
+    # Run specific test module
+    $ ./run_tests.sh test_storage
+
+    # Run with different verbosity
+    $ ./run_tests.sh -v 0  # quiet
+    $ ./run_tests.sh -v 2  # verbose
+
+For more details about the test suite, see the [tests/README.md](tests/README.md) file.
