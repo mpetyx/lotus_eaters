@@ -9,6 +9,7 @@ Enables use of:
     pass
 """
 
+import logging
 
 from . import bucket
 
@@ -57,9 +58,9 @@ class Throttler(object):
         """Consume an amount for a given key, or raise a Throttled exception."""
 
         if not self.consume(key, amount, rate, capacity, **kwargs):
+            logging.warning("Request of %d unit for %s exceeds capacity.",
+                    amount, key)
             return False
-            raise exc_class("Request of %d unit for %s exceeds capacity."
-                    % (amount, key))
         return True
 
 
